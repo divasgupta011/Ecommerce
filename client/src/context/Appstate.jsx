@@ -11,7 +11,7 @@ const Appstate = (props) => {
   const [user,setUser] = useState();
   const [cart,setCart] = useState([]);
   const [reload,setReload] = useState(false);
-
+  const [userAddress,setUserAddress] = useState([]);
 
   const url = "http://localhost:1000/api"
 
@@ -29,6 +29,7 @@ const Appstate = (props) => {
     }
     fetchProduct();
     userCart();
+    getUserAddress();
   }, [token, reload])
 
   // Save token to local storage when it updates
@@ -130,8 +131,74 @@ const Appstate = (props) => {
     setCart(api.data.cart)
   }
 
+  // DECREASE QUANTITY 
+
+  const decreaseQuantity = async (productId, quantity)=>{
+    const api = await axios.post(`${url}/cart/--quantity`,{productId, quantity},{
+      headers:{
+        "Content-Type": "Application/json",
+        Auth:token
+      },
+      withCredentials: true
+    })
+    setReload(!reload);
+  }
+
+  const deleteFromCart = async (productId)=>{
+    const api = await axios.delete(`${url}/cart/remove/${productId}`, {
+      headers: {
+        "Content-Type": "Application/json",
+        Auth: token,
+      },
+      withCredentials: true,
+    });
+    setReload(!reload);
+  }
+
+
+  const clearCart = async () => {
+    const api = await axios.delete(`${url}/cart/clear`, {
+      headers: {
+        "Content-Type": "Application/json",
+        Auth: token,
+      },
+      withCredentials: true,
+    });
+    setReload(!reload);
+  };
+
+
+
+  //  Add a new shipping address 
+
+  const shippingaddress = async (fullName, address, city, state, country, pincode, phoneNumber) => {
+    const api = await axios.post(`${url}/address/add`,{fullName, address, city, state, country, pincode, phoneNumber},
+      {
+        headers:{
+          "Content-Type": "Application/json",
+          Auth:token
+        },
+        withCredentials: true
+      }
+    )
+    setReload(!reload);
+    return api.data;
+  }
+
+  // get user address
+  const getUserAddress = async () => {
+    const api = await axios.get(`${url}/address/get`, {
+      headers: {
+        "Content-Type": "Application/json",
+        Auth: token,
+      },
+      withCredentials: true,
+    });
+    setUserAddress(api.data.userAddress);
+  }
+
   return (
-    <Appcontext.Provider value={{ products, register, login, url, token, isAuthenticated, setIsAuthenticated, filteredData, setFilteredData, logout, user, addToCart, cart }}>
+    <Appcontext.Provider value={{ products, register, login, url, token, isAuthenticated, setIsAuthenticated, filteredData, setFilteredData, logout, user, addToCart, cart, decreaseQuantity, deleteFromCart, clearCart, shippingaddress, getUserAddress, userAddress}}>
       {props.children}
     </Appcontext.Provider>
   )

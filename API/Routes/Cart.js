@@ -13,6 +13,6 @@ router.delete("/remove/:productId", Authenticated,removeFromCart);
 
 router.delete("/clear",Authenticated, clearCart);
 
-router.delete("/--quantity",Authenticated, decreaseQty);
+router.post("/--quantity",Authenticated, decreaseQty);
 
 export default router;

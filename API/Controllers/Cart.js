@@ -44,20 +44,20 @@ export const userCart = async (req, res) => {
 
 export const removeFromCart = async (req, res) => {
     const productId = req.params.productId;
-
     const userId = req.user;
 
-    let cart = await Cart.findOne({userId});
-    if(!cart) return res.json("Cart not found");
+    let cart = await Cart.findOne({ userId });
+    if (!cart) return res.json("Cart not found");
 
-    cart.items = cart.items.filter((item)=>{
-        item.productId.toString() !== productId
-    })
+    cart.items = cart.items.filter((item) => {
+        return item.productId.toString() !== productId; // Include the return statement
+    });
 
     await cart.save();
 
-    res.json({message:"product removed"});
+    res.json({ message: "Product removed" });
 }
+
 
 // CLEAR CART
 

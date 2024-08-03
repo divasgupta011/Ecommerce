@@ -7,7 +7,6 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const {setFilteredData, products, logout, isAuthenticated, cart} = useContext(Appcontext);
-  console.log(cart);
   
   const filterByCategory = (cat) => {
     if (cat === "all") {
@@ -37,7 +36,9 @@ const Navbar = () => {
               <>
               <Link to={"/cart"} type="button" className="btn">
               <span className="material-icons">shopping_cart</span>
-              <span className="badge bg-danger">{cart?.items?.length}</span>
+              {cart?.items?.length>0 && (
+                <span className="badge bg-danger">{cart?.items?.length}</span>
+              )}
               </Link>
               <Link to={'/profile'} className="btn">Profile</Link>
               <button className="btn" onClick={()=>{
@@ -55,6 +56,7 @@ const Navbar = () => {
             
         </div>
     </div>
+    {location.pathname == "/" &&(
     <div className='Navbar'>
     <div className="items" onClick={()=>filterByCategory("all")}>No filter</div>
       <div className="items" onClick={()=>filterByCategory("phone")}>Mobiles</div>
@@ -62,6 +64,8 @@ const Navbar = () => {
       <div className="items" onClick={()=>filterByCategory("camera")}>Camera</div>
       <div className="items" onClick={()=>filterByCategory("headphone")}>Headphone</div>
     </div>
+
+    )}
     </div>
   )
 }

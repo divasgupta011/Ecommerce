@@ -8,7 +8,7 @@ export const addAddress = async (req, res) => {
     let userAddress = await Address.create(
         {userId, fullName, address, city, state, country, pincode, phoneNumber}
     );
-    res.json({message: "Address added", userAddress});
+    res.json({message: "Address added", userAddress, success: true});
 }
 
 export const getAddress = async (req, res) => {
